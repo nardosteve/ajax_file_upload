@@ -16,17 +16,74 @@
     <h1 class="text-center mt-5">AJAX File Upload</h1>
 
     <div class="container w-50 mt-4">
-        <form id="formSubmit" action="db/insert.php" method="POST" enctype="multipart/form-data">
+        <div class="statusMsg"></div>
+        <form id="formSubmit" enctype="multipart/form-data">
+            <div class="row">
+                <div class="col-6">
+                    <label for="name" class="form-label">Name</label>
+                    <input type="text" class="form-control" id="name" name="name" aria-describedby="name">
+                </div>
+                <div class="col-6">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="email" class="form-control" id="email" name="email" aria-describedby="email">
+                </div>
+            </div>
             <div class="mb-3">
                 <label for="file" class="form-label">Upload File</label>
-                <input type="file" class="form-control" id="file" aria-describedby="file">
+                <input type="file" class="form-control" id="file" name="file" aria-describedby="file">
             </div>
             <div class="d-grid gap-2">
-                <button type="submit" class="btn btn-outline-success">Save</button>
+                <button type="submit" id="submit" class="btn btn-outline-success">Save</button>
             </div>
         </form>
     </div>
 
 </body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script>
+    $(document).ready(function(e){
+        $('#formSubmit').on('submit', function(e){
+            e.preventDefault();
+
+            $.ajax({
+                type: 'POST',
+                url: 'db/insert.php',
+                data: new FormData(this),
+                dataType: 'json',
+                contentType: false,
+                processData: false,
+                beforeSend: function(){
+                    $('.btn').attr("disabled","disabled");
+                    $('#formSubmit').css("opacity",".5");
+                },
+                success: function(response){
+                    $('.statusMsg').html('');
+                    
+                    if(response.status == 1){
+                        $('#formSubmit')[0].reset();
+                        $('.statusMsg').html('<p class="alert alert-success">'+response.message+'</p>')
+                    }else{
+                        ('.statusMsg').html('<p class="alert alert-danger">'+response.message+'</p>');
+                    }
+                    $('#formSubmit').css("opacity","");
+                    $(".btn").removeAttr("disabled");
+                }
+            });
+        });
+
+        // File type validation
+        $("#file").change(function() {
+            var file = this.files[0];
+            var fileType = file.type;
+            var match = ['application/pdf', 'application/msword', 'application/vnd.ms-office', 'image/jpeg', 'image/png', 'image/jpg'];
+            if(!((fileType == match[0]) || (fileType == match[1]) || (fileType == match[2]) || (fileType == match[3]) || (fileType == match[4]) || (fileType == match[5]))){
+                alert('Sorry, only PDF, DOC, JPG, JPEG, & PNG files are allowed to upload.');
+                $("#file").val('');
+                return false;
+            }
+        });
+    });
+</script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
+
 </html>
