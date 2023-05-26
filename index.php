@@ -106,13 +106,13 @@
             success: function(response){
                 $('.statusMsg').html('');
                 if(response.status == 1){
-                    $('#fupForm')[0].reset();
+                    $('#formSubmit')[0].reset();
                     $('.statusMsg').html('<p class="alert alert-success">'+response.message+'</p>');
                 }else{
                     $('.statusMsg').html('<p class="alert alert-danger">'+response.message+'</p>');
                 }
-                $('#fupForm').css("opacity","");
-                $(".submitBtn").removeAttr("disabled");
+                $('#formSubmit').css("opacity","");
+                $(".btn").removeAttr("disabled");
             }
         });
     });

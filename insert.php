@@ -5,10 +5,10 @@ print_r($_POST);
 print_r($_FILES);
 //Show files on network console
 
-include_once 'connection.php';
+include_once 'db/connection.php';
 
 // File upload folder 
-$uploadDir = '../uploads/'; 
+$uploadDir = 'uploads/'; 
  
 // Allowed file types 
 $allowTypes = array('pdf', 'doc', 'docx', 'jpg', 'png', 'jpeg'); 
