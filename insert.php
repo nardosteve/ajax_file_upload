@@ -1,13 +1,11 @@
 <?php
 
-// echo"<pre>".print_r($_POST,1)."</pre>";
-// exit;
-
-echo "<pre>";
+//Show files on network console
+print_r($_POST);
 print_r($_FILES);
+//Show files on network console
 
-
-include 'connection.php';
+include_once 'connection.php';
 
 // File upload folder 
 $uploadDir = '../uploads/'; 

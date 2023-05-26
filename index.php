@@ -39,51 +39,86 @@
     </div>
 
 </body>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.7.0.js" integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM=" crossorigin="anonymous"></script>
+
 <script>
-    $(document).ready(function(e){
-        $('#formSubmit').on('submit', function(e){
-            e.preventDefault();
+    // $(document).ready(function(e){
+    //     $('#formSubmit').on('submit', function(e){
+    //         e.preventDefault();
+    //         //
+    //         var formData = new FormData(this);
 
-            $.ajax({
-                type: 'POST',
-                url: 'db/insert.php',
-                data: new FormData(this),
-                dataType: 'json',
-                contentType: false,
-                processData: false,
-                beforeSend: function(){
-                    $('.btn').attr("disabled","disabled");
-                    $('#formSubmit').css("opacity",".5");
-                },
-                success: function(response){
-                    $('.statusMsg').html('');
+    //         $.ajax({
+    //             type: 'POST',
+    //             url: 'db/insert.php',
+    //             data: formData,
+    //             dataType: 'json',
+    //             contentType: false,
+    //             processData: false,
+    //             beforeSend: function(){
+    //                 $('.btn').attr("disabled", "disabled");
+    //                 $('#formSubmit').css("opacity", ".5");
+    //             },
+    //             success: function(response){
+    //                 $('.statusMsg').html('');
                     
-                    if(response.status == 1){
-                        $('#formSubmit')[0].reset();
-                        $('.statusMsg').html('<p class="alert alert-success">'+response.message+'</p>')
-                    }else{
-                        ('.statusMsg').html('<p class="alert alert-danger">'+response.message+'</p>');
-                    }
-                    $('#formSubmit').css("opacity","");
-                    $(".btn").removeAttr("disabled");
-                }
-            });
-        });
+    //                 if(response.status == 1){
+    //                     $('#formSubmit')[0].reset();
+    //                     $('.statusMsg').html('<p class="alert alert-success">'+response.message+'</p>')
+    //                 }else{
+    //                     ('.statusMsg').html('<p class="alert alert-danger">'+response.message+'</p>');
+    //                 }
+    //                 $('#formSubmit').css("opacity","");
+    //                 $(".btn").removeAttr("disabled");
+    //             }
+    //         });
+    //     });
 
-        // File type validation
-        $("#file").change(function() {
-            var file = this.files[0];
-            var fileType = file.type;
-            var match = ['application/pdf', 'application/msword', 'application/vnd.ms-office', 'image/jpeg', 'image/png', 'image/jpg'];
-            if(!((fileType == match[0]) || (fileType == match[1]) || (fileType == match[2]) || (fileType == match[3]) || (fileType == match[4]) || (fileType == match[5]))){
-                alert('Sorry, only PDF, DOC, JPG, JPEG, & PNG files are allowed to upload.');
-                $("#file").val('');
-                return false;
+    //     // File type validation
+    //     $("#file").change(function() {
+    //         var file = this.files[0];
+    //         var fileType = file.type;
+    //         var match = ['application/pdf', 'application/msword', 'application/vnd.ms-office', 'image/jpeg', 'image/png', 'image/jpg'];
+    //         if(!((fileType == match[0]) || (fileType == match[1]) || (fileType == match[2]) || (fileType == match[3]) || (fileType == match[4]) || (fileType == match[5]))){
+    //             alert('Sorry, only PDF, DOC, JPG, JPEG, & PNG files are allowed to upload.');
+    //             $("#file").val('');
+    //             return false;
+    //         }
+    //     });
+    // });
+
+    $(document).ready(function(e){
+    // Submit form data via Ajax
+    $("#formSubmit").on('submit', function(e){
+        e.preventDefault();
+        $.ajax({
+            type: 'POST',
+            url: 'insert.php',
+            data: new FormData(this),
+            dataType: 'json',
+            contentType: false,
+            cache: false,
+            processData:false,
+            beforeSend: function(){
+                $('.btn').attr("disabled","disabled");
+                $('#formSubmit').css("opacity",".5");
+            },
+            success: function(response){
+                $('.statusMsg').html('');
+                if(response.status == 1){
+                    $('#fupForm')[0].reset();
+                    $('.statusMsg').html('<p class="alert alert-success">'+response.message+'</p>');
+                }else{
+                    $('.statusMsg').html('<p class="alert alert-danger">'+response.message+'</p>');
+                }
+                $('#fupForm').css("opacity","");
+                $(".submitBtn").removeAttr("disabled");
             }
         });
     });
+});
 </script>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
 
 </html>
