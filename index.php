@@ -16,7 +16,6 @@
     <h1 class="text-center mt-5">AJAX File Upload</h1>
 
     <div class="container w-50 mt-4">
-        <div class="statusMsg"></div>
         <form id="formSubmit" enctype="multipart/form-data">
             <div class="row">
                 <div class="col-6">
@@ -33,90 +32,68 @@
                 <input type="file" class="form-control" id="file" name="file" aria-describedby="file">
             </div>
             <div class="d-grid gap-2">
-                <button type="submit" id="submit" class="btn btn-outline-success">Save</button>
+                <button type="submit" value="Save" id="submitBtn" class="btn btn-outline-success">Save</button>
             </div>
+
+            <!-- display msg -->
+            <div class="statusMsg"></div>
+            <!-- display msg -->
         </form>
     </div>
 
 </body>
 <script src="https://code.jquery.com/jquery-3.7.0.js" integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM=" crossorigin="anonymous"></script>
 
-<script>
-    // $(document).ready(function(e){
-    //     $('#formSubmit').on('submit', function(e){
-    //         e.preventDefault();
-    //         //
-    //         var formData = new FormData(this);
+<script type="text/javascript">
+    $(document).ready(function(){
+        $('#submitBtn').click(function(e){
+            //
+            e.preventDefault();
+            const form = document.getElementById("formSubmit");
+            
+            const submitter = document.querySelector("button[value=Save]");
+            //Get form
+            // var formData = $('#formSubmit');
+            // console.log(formData);
 
-    //         $.ajax({
-    //             type: 'POST',
-    //             url: 'db/insert.php',
-    //             data: formData,
-    //             dataType: 'json',
-    //             contentType: false,
-    //             processData: false,
-    //             beforeSend: function(){
-    //                 $('.btn').attr("disabled", "disabled");
-    //                 $('#formSubmit').css("opacity", ".5");
-    //             },
-    //             success: function(response){
-    //                 $('.statusMsg').html('');
-                    
-    //                 if(response.status == 1){
-    //                     $('#formSubmit')[0].reset();
-    //                     $('.statusMsg').html('<p class="alert alert-success">'+response.message+'</p>')
-    //                 }else{
-    //                     ('.statusMsg').html('<p class="alert alert-danger">'+response.message+'</p>');
-    //                 }
-    //                 $('#formSubmit').css("opacity","");
-    //                 $(".btn").removeAttr("disabled");
-    //             }
-    //         });
-    //     });
+            //create formData object
+            var dataObj = new FormData(form,submitter);
 
-    //     // File type validation
-    //     $("#file").change(function() {
-    //         var file = this.files[0];
-    //         var fileType = file.type;
-    //         var match = ['application/pdf', 'application/msword', 'application/vnd.ms-office', 'image/jpeg', 'image/png', 'image/jpg'];
-    //         if(!((fileType == match[0]) || (fileType == match[1]) || (fileType == match[2]) || (fileType == match[3]) || (fileType == match[4]) || (fileType == match[5]))){
-    //             alert('Sorry, only PDF, DOC, JPG, JPEG, & PNG files are allowed to upload.');
-    //             $("#file").val('');
-    //             return false;
-    //         }
-    //     });
-    // });
-
-    $(document).ready(function(e){
-    // Submit form data via Ajax
-    $("#formSubmit").on('submit', function(e){
-        e.preventDefault();
-        $.ajax({
-            type: 'POST',
-            url: 'insert.php',
-            data: new FormData(this),
-            dataType: 'json',
-            contentType: false,
-            cache: false,
-            processData:false,
-            beforeSend: function(){
-                $('.btn').attr("disabled","disabled");
-                $('#formSubmit').css("opacity",".5");
-            },
-            success: function(response){
-                $('.statusMsg').html('');
-                if(response.status == 1){
-                    $('#formSubmit')[0].reset();
-                    $('.statusMsg').html('<p class="alert alert-success">'+response.message+'</p>');
-                }else{
-                    $('.statusMsg').html('<p class="alert alert-danger">'+response.message+'</p>');
-                }
-                $('#formSubmit').css("opacity","");
-                $(".btn").removeAttr("disabled");
+            for (const value of dataObj.values()) {
+                username = value.email;
             }
+            // console.log(dataObj);
+
+            jQuery.each(jQuery('#file')[0].files, function(i, file) {
+                dataObj.append('file-'+i, file);
+            });
+
+            //disable dubmit btn
+            $('#submitBtn').prop('disabled', true);
+
+            $.ajax({
+                type: 'POST',
+                enctype: 'multipart/form-data',
+                url: 'insert.php',
+                data: dataObj,
+                processData: false,
+                contentType: false,
+                cache: false,
+                timeout: 800000,
+                success: function(data){
+                    $('#statusMsg').text(data);
+                    console.log("Sucesss: ", data);
+                    $('#submitBtn').prop('disabled', false);
+                } ,
+                error: function(e){
+                    $("#statusMsg").text(e.responseText);
+                    console.log("Error: ", e);
+                    $("#submitBtn").prop("disabled", false);
+                }  
+            });
         });
     });
-});
+
 </script>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>

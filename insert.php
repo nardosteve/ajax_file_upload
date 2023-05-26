@@ -1,8 +1,8 @@
 <?php
 
 //Show files on network console
-print_r($_POST);
-print_r($_FILES);
+// print_r($_POST);
+// print_r($_FILES);
 //Show files on network console
 
 include_once 'db/connection.php';
@@ -25,7 +25,7 @@ if(isset($_POST['submit'])){
     $name = $_POST['name']; 
     $email = $_POST['email'];
      
-    // Check whether submitted data is not empty 
+    // // Check whether submitted data is not empty 
     if(!empty($name) && !empty($email)){ 
         // Validate email 
         if(filter_var($email, FILTER_VALIDATE_EMAIL) === false){ 
@@ -35,6 +35,7 @@ if(isset($_POST['submit'])){
              
             // Upload file 
             $uploadedFile = ''; 
+            
             if(!empty($_FILES["file"]["name"])){ 
                 // File path config 
                 $fileName = basename($_FILES["file"]["name"]); 
@@ -72,6 +73,7 @@ if(isset($_POST['submit'])){
     }else{ 
          $response['message'] = 'Please fill all the mandatory fields (name and email).'; 
     } 
+
 } 
  
 // Return response 
