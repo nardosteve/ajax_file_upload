@@ -16,7 +16,7 @@
     <h1 class="text-center mt-5">AJAX File Upload</h1>
 
     <div class="container w-50 mt-4">
-        <form id="formSubmit" enctype="multipart/form-data">
+        <form id="formSubmit" action="insert.php" method="POST" enctype="multipart/form-data">
             <div class="row">
                 <div class="col-6">
                     <label for="name" class="form-label">Name</label>
@@ -29,7 +29,7 @@
             </div>
             <div class="mb-3">
                 <label for="file" class="form-label">Upload File</label>
-                <input type="file" class="form-control" id="file" name="file" aria-describedby="file">
+                <input type="file" class="form-control" multiple id="file" name="file" aria-describedby="file">
             </div>
             <div class="d-grid gap-2">
                 <button type="submit" value="Save" id="submitBtn" class="btn btn-outline-success">Save</button>
@@ -45,28 +45,28 @@
 <script src="https://code.jquery.com/jquery-3.7.0.js" integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM=" crossorigin="anonymous"></script>
 
 <script type="text/javascript">
+
     $(document).ready(function(){
         $('#submitBtn').click(function(e){
             //
             e.preventDefault();
-            const form = document.getElementById("formSubmit");
-            
-            const submitter = document.querySelector("button[value=Save]");
-            //Get form
-            // var formData = $('#formSubmit');
-            // console.log(formData);
 
-            //create formData object
-            var dataObj = new FormData(form,submitter);
+            var formData = new FormData();
 
-            for (const value of dataObj.values()) {
-                username = value.email;
+            //Get input by id
+            var fileSelect = document.getElementById('file');
+            //Get selected file from input
+            var files = fileSelect.files;
+
+            formData.append('name', $('#name').val());
+            formData.append('email', $('#email').val());
+
+            //Get file using a loop
+            for(var i = 0; i < files.length; i++){
+                var file = files[i];
+                console.log(file);
+                formData.append('files', file, file.name);
             }
-            // console.log(dataObj);
-
-            jQuery.each(jQuery('#file')[0].files, function(i, file) {
-                dataObj.append('file-'+i, file);
-            });
 
             //disable dubmit btn
             $('#submitBtn').prop('disabled', true);
@@ -75,7 +75,7 @@
                 type: 'POST',
                 enctype: 'multipart/form-data',
                 url: 'insert.php',
-                data: dataObj,
+                data: formData,
                 processData: false,
                 contentType: false,
                 cache: false,

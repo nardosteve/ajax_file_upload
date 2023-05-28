@@ -20,7 +20,7 @@ $response = array(
 ); 
 
 // If form is submitted 
-if(isset($_POST['submit'])){ 
+if(isset($_POST['submitBtn'])){ 
     // Get the submitted form data 
     $name = $_POST['name']; 
     $email = $_POST['email'];
